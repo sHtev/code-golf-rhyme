@@ -1,33 +1,15 @@
-w = ["Head,", "shoulders,", "knees and", "toes", "and eyes", "and ears", "and mouth and", "nose"]
-r = ["...,", "...,", "... ...", "...", "... ...", "... ...", "... ... ...", "..."]
-
-lines = [[1,2,3,4], [3, 4], [1,2,3,4], [3, 4], [5, 6, 7, 8], [1,2,3,4], [3,4]]
-
-defmodule CodeGolf do
-
-def gen_words(_, _, []), do: []
-def gen_words(_, 0, rest), do: rest
-def gen_words([replacement| r_rest], n, [_|rest]), do:
-    [replacement | gen_words(r_rest, n-1, rest)]
-
-def print_line([index | []], words),    do:  words[index]
-def print_line([index | rest], words),         do:  
-        words[index] <> " " <> print_line(rest, words)
-
-def print_verse([line | []], words),     do: print_line(line, words)
-def print_verse([line | rest], words), do: 
-        print_line(line, words) <> "\n" <> print_verse(rest, words)
-
-
-def print_song(lines, replace, words, 0),        do:
-    print_verse(lines, Enum.into(Enum.zip([1,2,3,4,5,6,7,8], gen_words(replace, 8, words)), %{}))
-
-def print_song(lines, replace, words, n),        do:
-    print_verse(lines, Enum.into(Enum.zip([1,2,3,4,5,6,7,8], gen_words(replace, 8-n, words)), %{})) <> "\n\n" <> print_song(lines, replace, words, n-1)
-
+w = ["Head,","shoulders,","knees and","toes","and eyes","and ears","and mouth and","nose"]
+r = ["...,","...,","... ...","...","... ...","... ...","... ... ...","..."]
+l = [[1,2,3,4],[3,4],[1,2,3,4],[3,4],[5,6,7,8],[1,2,3,4],[3,4]]
+defmodule C do
+def g(_,_,[]),do: []
+def g(_,0,x),do: x
+def g([y|z],n,[_|x]),do: [y|g(z,n-1,x)]
+def p([i|[]],j),do: j[i]
+def p([i|k],j),do: j[i] <> " " <> p(k,j)
+def q([i|[]],j),do: p(i,j)
+def q([i|k], j),do: p(i,j) <> "\n" <> q(k,j)
+def s(i,j,k,0),do: q(i,Enum.into(Enum.zip([1,2,3,4,5,6,7,8],g(j,8,k)),%{}))
+def s(i,j,k,n),do: q(i,Enum.into(Enum.zip([1,2,3,4,5,6,7,8],g(j,8-n,k)),%{})) <> "\n\n" <> s(i,j,k,n-1)
 end
-
-
-
-
-IO.puts CodeGolf.print_song(lines, r, w, 8)
+IO.puts C.s(l,r,w,8)
