@@ -1,14 +1,18 @@
-words = ["Head,", "shoulders,", "knees", "and", "toes", "eyes", "ears", "mouth", "nose"]
+words = %{1 => "Head,", 2 => "shoulders,", 3 => "knees", 4 => "and", 5 => "toes", 6 => "eyes", 7 => "ears", 8 => "mouth", 9 => "nose"}
+
+lines = [[1,2,3,4,5], [3,4,5], [1,2,3,4,5], [3,4,5], [4,6,4,7,4,8,4,9], [1,2,3,4,5], [3,4,5]]
 
 defmodule CodeGolf do
 
-def print_line([word | []]),         do:  word
-def print_line([word | rest]),   do:  word <> " " <> print_line(rest)
+def print_line([index | []], words),    do:  words[index]
+def print_line([index | rest], words),         do:  
+        words[index] <> " " <> print_line(rest, words)
+
+def print_verse([line | []], words),     do: print_line(line, words)
+def print_verse([line | rest], words), do: 
+        print_line(line, words) <> "\n" <> print_verse(rest, words)
 
 end
 
-print_verse = fn line_words ->
-    IO.puts CodeGolf.print_line(line_words)
-end
 
-print_verse.(words)
+IO.puts CodeGolf.print_verse(lines, words)
